@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-import-module-exports
 import database from './src/config/database';
 
 const databaseConfig = database();
