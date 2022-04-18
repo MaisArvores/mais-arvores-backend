@@ -1,27 +1,22 @@
-// eslint-disable-next-line import/no-import-module-exports
-import database from './src/config/database';
-
-const databaseConfig = database();
-
 module.exports = {
-  type: databaseConfig.DIALECT,
-  host: databaseConfig.HOST,
-  port: databaseConfig.PORT,
-  username: databaseConfig.USER,
-  password: databaseConfig.PASSWORD,
-  database: databaseConfig.NAME,
+  type: process.env.DB_DIALECT,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   synchronize: false,
   entities: [
-    './src/modules/**/entities/**/*.{ts,js}',
-    './src/shared/infra/typeorm/entities/**/*.{ts,js}',
+    './dist/src/modules/**/entities/**/*.{ts,js}',
+    './dist/src/shared/infra/typeorm/entities/**/*.{ts,js}',
   ],
-  migrations: [`./src/shared/infra/typeorm/migrations/**/*.{ts,js}`],
+  migrations: [`./dist/src/shared/infra/typeorm/migrations/**/*.{ts,js}`],
   cli: {
     entitiesDir: [
-      `./src/modules/**/entities/**/*.{ts,js}`,
-      `./src/shared/infra/typeorm/entities/**/*.{ts,js}`,
+      `./dist/src/modules/**/entities/**/*.{ts,js}`,
+      `./dist/src/shared/infra/typeorm/entities/**/*.{ts,js}`,
     ],
-    migrationsDir: `./src/shared/infra/typeorm/migrations`,
+    migrationsDir: `./dist/src/shared/infra/typeorm/migrations`,
   },
   autoLoadEntities: true,
 };
