@@ -5,7 +5,6 @@ export default async (name = 'default'): Promise<Connection> => {
   const defaultOptions = await getConnectionOptions();
   const databaseConfig = database();
 
-  console.log(databaseConfig);
   return createConnection(
     Object.assign(defaultOptions, {
       name,
