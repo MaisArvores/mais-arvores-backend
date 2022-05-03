@@ -1,5 +1,4 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-
 import { DefaultEntity } from '../../../../../shared/infra/typeorm/entities/DefaultEntity';
 import { IRequestProductDTO } from '../../../dtos/IRequestProductDTO';
 import Product from '../../../../product/infra/typeorm/entities/Product';

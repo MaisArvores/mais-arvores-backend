@@ -6,7 +6,7 @@ import User from '../../../../user/infra/typeorm/entities/User';
 
 @Entity('user_detail')
 export class UserDetail extends DefaultEntity implements IUserDetailDTO {
-  @OneToOne(() => User, { primary: true, eager: true })
+  @OneToOne(() => User, { primary: true, eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
@@ -30,9 +30,6 @@ export class UserDetail extends DefaultEntity implements IUserDetailDTO {
 
   @Column()
   number: number;
-
-  @Column({ name: 'register_number' })
-  registerNumber: string;
 
   @Column()
   state: string;

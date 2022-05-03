@@ -5,6 +5,7 @@ import FindUserService from '../../../services/FindUserService';
 import UpdateUserService from '../../../services/UpdateUserService';
 import AuthenticateUserService from '../../../services/AuthenticateUserService';
 import CreateUserService from '../../../services/CreateUserService';
+import DeleteUserService from 'modules/user/services/DeleteUserService';
 
 export default class UserController {
   async create(request: Request, response: Response): Promise<void> {
@@ -36,6 +37,14 @@ export default class UserController {
     const updateUserService = container.resolve(UpdateUserService);
 
     response.json(await updateUserService.execute(String(id), user));
+  }
+
+  async delete(request: Request, response: Response): Promise<void> {
+    const { id } = request.params;
+
+    const deleteUserService = container.resolve(DeleteUserService);
+
+    response.json(await deleteUserService.execute(id));
   }
 
   async authenticate(request: Request, response: Response): Promise<void> {

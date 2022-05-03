@@ -5,6 +5,7 @@ export interface IUserRepository {
   findByUsername(username: string): Promise<IUserDTO | undefined>;
   save(user: IUserDTO): Promise<IUserDTO>;
   listUser(): Promise<IUserDTO[]>;
-  findById(id: string): Promise<IUserDTO | undefined>;
+  findById(id: string): Promise<IUserDTO | null | undefined>;
   update(id: string, user: IUserDTO): Promise<void>;
+  delete(id: string): Promise<void>;
 }

@@ -12,8 +12,8 @@ export class UserDetailRepository implements IUserDetailRepository {
     this.repository = getRepository(UserDetail);
   }
 
-  findById(id: string): Promise<IUserDetailDTO | undefined> {
-    return this.repository.findOne(id);
+  findByRG(cpf: string): Promise<IUserDetailDTO | undefined> {
+    return this.repository.findOne({ cpf });
   }
 
   save(userDetail: IUserDetailDTO): Promise<IUserDetailDTO> {
@@ -27,5 +27,9 @@ export class UserDetailRepository implements IUserDetailRepository {
 
   async update(id: string, userDetail: IUserDetailDTO): Promise<void> {
     await this.repository.update(id, userDetail);
+  }
+
+  findById(id: string): Promise<IUserDetailDTO | undefined> {
+    return this.repository.findOne(id);
   }
 }

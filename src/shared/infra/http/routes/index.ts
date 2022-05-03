@@ -5,6 +5,7 @@ import { productRoutes } from '../../../../modules/product/infra/http/routes/pro
 import { userDetailRoutes } from '../../../../modules/userDetail/infra/http/routes/userDetail.routes';
 import { paymentMethodRoutes } from '../../../../modules/paymentMethod/infra/http/routes/paymentMethod.routes';
 import { requestRoutes } from '../../../../modules/request/infra/http/routes/request.routes';
+import { requestStatusRoutes } from '../../../../modules/defaultRequestStatus/infra/http/routes/requestStatus.routes';
 
 const routes = Router();
 
@@ -14,5 +15,6 @@ routes.use('/categories', categoryRoutes);
 routes.use('/products', productRoutes);
 routes.use('/payment-method', paymentMethodRoutes);
 routes.use('/request', requestRoutes);
+routes.use('/request-status', requestStatusRoutes);
 
 export { routes };

@@ -14,7 +14,7 @@ export class UpdateCategoryService {
     const foundCategory = await this.categoryRepository.findById(id);
 
     if (!foundCategory) {
-      throw new AppError('Category not found');
+      throw new AppError('RequestStatus not found');
     }
 
     await this.categoryRepository.update(id, category);

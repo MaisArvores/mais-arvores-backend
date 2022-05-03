@@ -14,7 +14,7 @@ export class FindCategoryService {
     const category = await this.categoryRepository.findById(id);
 
     if (!category) {
-      throw new AppError('Category not found');
+      throw new AppError('RequestStatus not found');
     }
 
     return category;

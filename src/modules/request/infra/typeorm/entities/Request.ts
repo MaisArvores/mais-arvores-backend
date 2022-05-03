@@ -12,6 +12,7 @@ import { DefaultEntity } from '../../../../../shared/infra/typeorm/entities/Defa
 import User from '../../../../user/infra/typeorm/entities/User';
 import { PaymentMethod } from '../../../../paymentMethod/infra/typeorm/entities/PaymentMethod';
 import { RequestProduct } from './RequestProduct';
+import RequestStatus from '../../../../defaultRequestStatus/infra/typeorm/entities/RequestStatus';
 
 @Entity('request')
 export class Request extends DefaultEntity implements IRequestDTO {
@@ -39,6 +40,10 @@ export class Request extends DefaultEntity implements IRequestDTO {
     cascade: true,
   })
   products: RequestProduct[];
+
+  @ManyToOne(() => RequestStatus)
+  @JoinColumn({ name: 'id_default_request_status' })
+  requestStatus: RequestStatus;
 
   constructor() {
     super();

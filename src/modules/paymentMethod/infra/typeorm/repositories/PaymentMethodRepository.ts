@@ -17,7 +17,7 @@ export class PaymentMethodRepository implements IPaymentMethodRepository {
 
   findByDescription(
     description: string,
-  ): Promise<IPaymentMethodDTO | undefined> {
+  ): Promise<IPaymentMethodDTO | undefined | null> {
     return this.repository.findOne({ description });
   }
 
@@ -25,8 +25,8 @@ export class PaymentMethodRepository implements IPaymentMethodRepository {
     return this.repository.find();
   }
 
-  findById(id: string): Promise<IPaymentMethodDTO | undefined> {
-    return this.repository.findOne(id);
+  findById(id: string): Promise<IPaymentMethodDTO | undefined | null> {
+    return this.repository.findOne({ id });
   }
 
   async update(id: string, paymentMethod: IPaymentMethodDTO): Promise<void> {

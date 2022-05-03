@@ -12,11 +12,11 @@ export class ProductRepository implements IProductRepository {
     this.repository = getRepository(Product);
   }
 
-  findById(id: string): Promise<IProductDTO | undefined> {
-    return this.repository.findOne(id);
+  findById(id: string): Promise<IProductDTO | undefined | null> {
+    return this.repository.findOne({ id });
   }
 
-  findByName(description: string): Promise<IProductDTO | undefined> {
+  findByName(description: string): Promise<IProductDTO | undefined | null> {
     return this.repository.findOne({ description });
   }
 

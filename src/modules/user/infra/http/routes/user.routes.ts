@@ -18,6 +18,8 @@ userRoutes.post(
 
 userRoutes.get('', ensureAuthenticated, ensureAdmin, userController.listUser);
 
+userRoutes.delete('/:id', ensureAuthenticated, userController.delete);
+
 userRoutes.get('/:id', userController.findById);
 
 userRoutes.put(

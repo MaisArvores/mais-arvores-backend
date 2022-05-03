@@ -17,13 +17,20 @@ export class RequestRepository implements IRequestRepository {
   }
 
   findById(id: string): Promise<IRequestDTO | undefined> {
-    return this.repository.findOne(id);
+    return this.repository.findOne(id, {
+      relations: ['requestStatus', 'products'],
+    });
   }
 
   listRequestsByUser(userId: string): Promise<IRequestDTO[]> {
     return this.repository.find({
       where: { user: { id: userId } },
-      relations: ['products', 'products.product'],
+      relations: [
+        'paymentMethod',
+        'products',
+        'products.product',
+        'requestStatus',
+      ],
     });
   }
 
@@ -37,6 +44,8 @@ export class RequestRepository implements IRequestRepository {
   }
 
   listAllRequests(): Promise<IRequestDTO[]> {
-    return this.repository.find();
+    return this.repository.find({
+      relations: ['products', 'products.product'],
+    });
   }
 }

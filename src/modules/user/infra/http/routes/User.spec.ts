@@ -1,11 +1,11 @@
-import { Connection, getConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import request from 'supertest';
-import createConnection from '../../../../../shared/infra/typeorm';
+import { createConnection } from '../../../../../shared/infra/typeorm';
 import { app } from '../../../../../shared/infra/http/app';
 
 describe('User integrated test suit', () => {
-  let connection: Connection;
+  let connection: DataSource;
 
   beforeAll(async () => {
     connection = await createConnection('test-connection');
@@ -14,11 +14,8 @@ describe('User integrated test suit', () => {
 
   afterAll(async () => {
     await connection.dropDatabase();
-    const mainConnection = getConnection();
 
-    await connection.close();
-
-    await mainConnection.close();
+    await connection.destroy();
   });
 
   it('should create an User', async () => {

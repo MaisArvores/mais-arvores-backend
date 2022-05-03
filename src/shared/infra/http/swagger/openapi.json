@@ -1,0 +1,1135 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mais Árvores Documentação",
+    "description": "Api de gerenciamento de produtos voltados à natureza",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Lucas Fernandes",
+      "url": "https://github.com/lucasFernandesFrancelli",
+      "email": "luffbsilva2002@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Ambiente Local"
+    },
+    {
+      "url": "https://mais-arvores-api.herokuapp.com",
+      "description": "Ambiente de produção"
+    }
+  ],
+  "paths": {
+    "/users/login": {
+      "post": {
+        "tags": ["Login"],
+        "summary": "Logar usuário",
+        "description": "Logar usuário no sistema com email e senha",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "example": {
+                  "email": "usuario@email.com",
+                  "password": "12345678"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Logado com sucesso" },
+          "401": { "description": "Email ou senha incorretos" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": ["Usuário"],
+        "summary": "Criar usuário",
+        "description": "Criar um novo usuário",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string", "minimum": 8 }
+                },
+                "example": {
+                  "username": "Nome_de_usuario",
+                  "email": "usuario@email.com",
+                  "password": "12345678"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Criado com sucesso" },
+          "422": { "description": "Nome de usuário ou email já existem" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      },
+      "get": {
+        "tags": ["Usuário"],
+        "summary": "Listar usuários",
+        "description": "Listar todos os usuários - Apenas usuário administrador pode listar",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Listado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "example": "095c8083-862a-4d3c-9122-87e82f23837c" },
+                      "username": { "type": "string", "example": "Nome do usuário" },
+                      "email": { "type": "string", "example": "usuario@email.com" },
+                      "isActive": { "type": "boolean", "example": true },
+                      "isAdmin": { "type": "boolean", "example": false }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Não autorizado!" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      }
+    },
+    "/users-detail/{id}": {
+      "put": {
+        "tags": ["Detalhes do Usuário"],
+        "summary": "Atualizar detalhes do usuário",
+        "description": "Atualizar os detalhes de um usuário pelo ID - Precisa estar autenticado",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "description": "Atualiza os detalhes do usuário pelo ID especificado"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": { "type": "string" },
+                  "lastName": { "type": "string" },
+                  "cpf": { "type": "string" },
+                  "street": { "type": "string" },
+                  "city": { "type": "string" },
+                  "neighborhood": { "type": "string" },
+                  "complement": { "type": "string" },
+                  "zipCode": { "type": "string" },
+                  "state": { "type": "string" },
+                  "number": { "type": "string" }
+                },
+                "example": {
+                  "city": "Cidade Exemplo",
+                  "complement": null,
+                  "cpf": "777.666.644-29",
+                  "firstName": "Jorginho",
+                  "lastName": "Silva",
+                  "neighborhood": "Bairo exemplo",
+                  "number": 103,
+                  "state": "SP",
+                  "street": "Rua Exemplo",
+                  "zipCode": "13347-762"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Atualizado com sucesso" },
+          "422": { "description": "Usuário não encontrado ou email ou cpf já cadastrado no banco" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      },
+      "get": {
+        "tags": ["Detalhes do Usuário"],
+        "summary": "Mostrar os detalhes de um usuário específico",
+        "description": "Mostra os detalhes de um usuário pelo ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "description": "Encontra o usuário pelo ID especificado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "firstName": { "type": "string" },
+                    "lastName": { "type": "string" },
+                    "cpf": { "type": "string" },
+                    "street": { "type": "string" },
+                    "city": { "type": "string" },
+                    "neighborhood": { "type": "string" },
+                    "complement": { "type": "string" },
+                    "zipCode": { "type": "string" },
+                    "state": { "type": "string" },
+                    "number": { "type": "string" },
+                    "user": {"type": "object"}
+                  },
+                  "example": {
+                    "city": "Cidade Exemplo",
+                    "complement": null,
+                    "cpf": "777.666.644-29",
+                    "firstName": "Jorginho",
+                    "lastName": "Silva",
+                    "neighborhood": "Bairo exemplo",
+                    "number": 103,
+                    "state": "SP",
+                    "street": "Rua Exemplo",
+                    "zipCode": "13347-762",
+                    "user": {
+                      "id": "3dfda35b-c94d-4df6-a857-b0938e7126aa",
+                      "createdAt": "2022-03-18T16:40:49.000Z",
+                      "updatedAt": "2022-03-18T16:40:49.000Z",
+                      "deletedAt": null,
+                      "username": "usuario_exemplo",
+                      "email": "usuario@email.com",
+                      "isActive": false,
+                      "isAdmin": false
+                    }
+                  }
+                }
+              }
+          },
+          "401": { "description": "Não autorizado!" },
+          "422": { "description": "Usuário não encontrado" },
+          "500": { "description": "Erro interno do servidor" }
+          }
+        }
+      }
+    },
+    "/users-detail": {
+      "post": {
+        "tags": ["Detalhes do Usuário"],
+        "summary": "Criar detalhes do usuário",
+        "description": "Criar novos detalhes do usuário",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": { "type": "string" },
+                  "lastName": { "type": "string" },
+                  "cpf": { "type": "string" },
+                  "street": { "type": "string" },
+                  "city": { "type": "string" },
+                  "neighborhood": { "type": "string" },
+                  "complement": { "type": "string" },
+                  "zipCode": { "type": "string" },
+                  "state": { "type": "string" },
+                  "number": { "type": "string" }
+                },
+                "example": {
+                  "city": "Cidade Exemplo",
+                  "complement": "Casa B",
+                  "cpf": "777.666.644-29",
+                  "firstName": "Jorginho",
+                  "lastName": "Silva",
+                  "neighborhood": "Bairo exemplo",
+                  "number": 103,
+                  "state": "SP",
+                  "street": "Rua Exemplo",
+                  "zipCode": "13347-762"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Criado com sucesso" },
+          "422": { "description": "Usuário já possui detalhes" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      },
+      "get": {
+        "tags": ["Detalhes do Usuário"],
+        "summary": "Listar os detalhes de todos os usuários",
+        "description": "Listar todos os detalhes de usuários - Apenas usuário administrador pode listar",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {  
+          "200": {
+            "description": "Listado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "firstName": { "type": "string" },
+                      "lastName": { "type": "string" },
+                      "cpf": { "type": "string" },
+                      "street": { "type": "string" },
+                      "city": { "type": "string" },
+                      "neighborhood": { "type": "string" },
+                      "complement": { "type": "string" },
+                      "zipCode": { "type": "string" },
+                      "state": { "type": "string" },
+                      "number": { "type": "string" },
+                      "user": {"type": "object"}
+                    },
+                    "example": {
+                      "city": "Cidade Exemplo",
+                      "complement": null,
+                      "cpf": "777.666.644-29",
+                      "firstName": "Jorginho",
+                      "lastName": "Silva",
+                      "neighborhood": "Bairo exemplo",
+                      "number": 103,
+                      "state": "SP",
+                      "street": "Rua Exemplo",
+                      "zipCode": "13347-762",
+                      "user": {
+                        "id": "3dfda35b-c94d-4df6-a857-b0938e7126aa",
+                        "createdAt": "2022-03-18T16:40:49.000Z",
+                        "updatedAt": "2022-03-18T16:40:49.000Z",
+                        "deletedAt": null,
+                        "username": "usuario_exemplo",
+                        "email": "usuario@email.com",
+                        "isActive": false,
+                        "isAdmin": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Não autorizado!" },
+          "500": { "description": "Erro interno do servidor" }
+          }
+      }
+    
+    },
+    "/users/{id}": {
+      "put": {
+        "tags": ["Usuário"],
+        "summary": "Atualizar usuário",
+        "description": "Atualizar um usuário pelo ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "description": "Atualiza o usuário pelo ID especificado"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "required": false },
+                  "email": { "type": "string", "required": false },
+                  "password": { "type": "string", "minimum": 8, "required": false }
+                },
+                "example": {
+                  "username": "Nome_de_usuario",
+                  "email": "usuario@email.com",
+                  "password": "12345678"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Atualizado com sucesso" },
+          "422": { "description": "Usuário não encontrado ou email ou nome de usuário já existem no banco" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      },
+      "get": {
+        "tags": ["Usuário"],
+        "summary": "Mostrar usuário",
+        "description": "Mostra um usuário pelo ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "description": "Encontra o usuário pelo ID especificado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string", "example": "095c8083-862a-4d3c-9122-87e82f23837c" },
+                    "username": { "type": "string", "example": "Nome do usuário" },
+                    "email": { "type": "string", "example": "usuario@email.com" },
+                    "isActive": { "type": "boolean", "example": true },
+                    "isAdmin": { "type": "boolean", "example": false }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Não autorizado!" },
+          "422": { "description": "Usuário não encontrado" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      },
+      "delete": {
+        "tags": ["Usuário"],
+        "summary": "Deletar usuário",
+        "description": "Deleta um usuário pelo ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "description": "Deleta o usuário pelo ID especificado"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Deletado com sucesso" },
+          "401": { "description": "Não autorizado!" },
+          "422": { "description": "Usuário não encontrado" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      }
+    },
+    "/categories": {
+      "post": {
+        "tags": ["Categoria"],
+        "summary": "Criar categoria",
+        "description": "Criar uma nova categoria - Apenas o usuário administrador pode criar",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": { "type": "string" }
+                },
+                  "description": "Exemplo categoria"
+                }
+              }
+            }
+          },
+        "responses": {
+          "201": { "description": "Criado com sucesso" },
+          "422": { "description": "Nome de categoria já cadastrado" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      },
+      "get": {
+        "tags": ["Categoria"],
+        "summary": "Listar categorias",
+        "description": "Listar todas as categorias - Precisa estar autenticado",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Listado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "example": "095c8083-862a-4d3c-9122-87e82f23837c" },
+                      "description": { "type": "string", "example": "Exemplo categoria" },
+                      "createdAt": {"type": "string", "example": "2022-03-18T20:08:39.000Z"},
+                      "updatedAt": {"type": "string", "example": "2022-03-18T20:08:39.000Z"},
+                      "deletedAt": {"type": "string", "example": null} 
+                      }
+                    }
+                  }
+                }
+              }
+            },
+          
+          "401": { "description": "Não autorizado!" },
+          "500": { "description": "Erro interno do servidor" }
+          }
+        }  
+      
+    },
+    "/categories/{id}": {
+        "get": {
+          "tags": ["Categoria"],
+          "summary": "Mostrar categoria",
+          "description": "Mostra uma categoria pelo ID",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "required": true,
+              "in": "path",
+              "name": "id",
+              "description": "Encontra a categoria pelo ID especificado"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Encontrado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "example": "095c8083-862a-4d3c-9122-87e82f23837c" },
+                      "description": { "type": "string", "example": "Exemplo categoria" },
+                      "createdAt": {"type": "string", "example": "2022-03-18T20:08:39.000Z"},
+                      "updatedAt": {"type": "string", "example": "2022-03-18T20:08:39.000Z"},
+                      "deletedAt": {"type": "string", "example": null} 
+                      }
+                  }
+                }
+              }
+            },
+            "401": { "description": "Não autorizado!" },
+            "422": { "description": "Produto não encontrado" },
+            "500": { "description": "Erro interno do servidor" }
+          }
+        },
+        "put": {
+          "tags": ["Categoria"],
+          "summary": "Atualizar categoria",
+          "description": "Atualizar uma categoria pelo ID - Usuário deve ser administrador",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "required": true,
+              "in": "path",
+              "name": "id",
+              "description": "Atualiza a categoria pelo ID especificado"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "description": { "type": "string" }
+                  },
+                  "example": {
+                    "description": "Exemplo produto"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Atualizado com sucesso" },
+            "422": { "description": "Categoria não encontrada ou nome já cadastrado no banco" },
+            "500": { "description": "Erro interno do servidor" }
+          }
+        },
+        "delete": {
+          "tags": ["Categoria"],
+          "summary": "Deletar categoria",
+          "description": "Deleta uma categoria pelo ID - Usuário deve ser administrador",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "required": true,
+              "in": "path",
+              "name": "id",
+              "description": "Deleta a categoria pelo ID especificado"
+            }
+          ],
+          "responses": {
+            "200": { "description": "Deletado com sucesso" },
+            "401": { "description": "Não autorizado!" },
+            "422": { "description": "Categoria não encontrado" },
+            "500": { "description": "Erro interno do servidor" }
+          }
+        }
+    },
+    "/payment-method": {
+        "post": {
+          "tags": ["Método de pagamento"],
+          "summary": "Criar método de pagamento",
+          "description": "Criar um novo método de pagamento - Apenas o usuário administrador pode criar",
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "description": { "type": "string" }
+                  },
+                    "description": "Exemplo Método de Pagamento"
+                  }
+                }
+              }
+            },
+          "responses": {
+            "201": { "description": "Criado com sucesso" },
+            "422": { "description": "Método já cadastrado" },
+            "500": { "description": "Erro interno do servidor" }
+          }
+        },
+        "get": {
+          "tags": ["Método de pagamento"],
+          "summary": "Listar métodos de pagamento",
+          "description": "Listar todos os métodos de pagamento - Precisa estar autenticado",
+          "security": [{ "bearerAuth": [] }],
+          "responses": {
+            "200": {
+              "description": "Listado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string", "example": "095c8083-862a-4d3c-9122-87e82f23837c" },
+                        "description": { "type": "string", "example": "Exemplo método de pagamento" },
+                        "createdAt": {"type": "string", "example": "2022-03-18T20:08:39.000Z"},
+                        "updatedAt": {"type": "string", "example": "2022-03-18T20:08:39.000Z"},
+                        "deletedAt": {"type": "string", "example": null} 
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+            
+            "401": { "description": "Não autorizado!" },
+            "500": { "description": "Erro interno do servidor" }
+            }
+          }  
+        
+    },
+      "/payment-method/{id}": {
+          "get": {
+            "tags": ["Método de pagamento"],
+            "summary": "Mostrar método de pagamento",
+            "description": "Mostra uma método de pagamento pelo ID",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+              {
+                "required": true,
+                "in": "path",
+                "name": "id",
+                "description": "Encontra o método de pagamento pelo ID especificado"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Encontrado com sucesso",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string", "example": "095c8083-862a-4d3c-9122-87e82f23837c" },
+                        "description": { "type": "string", "example": "Exemplo método de pagamento" },
+                        "createdAt": {"type": "string", "example": "2022-03-18T20:08:39.000Z"},
+                        "updatedAt": {"type": "string", "example": "2022-03-18T20:08:39.000Z"},
+                        "deletedAt": {"type": "string", "example": null} 
+                        }
+                    }
+                  }
+                }
+              },
+              "401": { "description": "Não autorizado!" },
+              "422": { "description": "Método de pagamento não encontrado" },
+              "500": { "description": "Erro interno do servidor" }
+            }
+          },
+          "put": {
+            "tags": ["Método de pagamento"],
+            "summary": "Atualizar método de pagamento",
+            "description": "Atualizar um método de pagamento pelo ID - Usuário deve ser administrador",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+              {
+                "required": true,
+                "in": "path",
+                "name": "id",
+                "description": "Atualiza o método de pagemtno pelo ID especificado"
+              }
+            ],
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "description": { "type": "string" }
+                    },
+                    "example": {
+                      "description": "Exemplo Método de Pagamento"
+                    }
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": { "description": "Atualizado com sucesso" },
+              "422": { "description": "Método de pagamento não encontrado ou nome já cadastrado no banco" },
+              "500": { "description": "Erro interno do servidor" }
+            }
+          },
+          "delete": {
+            "tags": ["Método de pagamento"],
+            "summary": "Deletar método de pagamento",
+            "description": "Deleta um método de pagamento pelo ID - Usuário deve ser administrador",
+            "security": [{ "bearerAuth": [] }],
+            "parameters": [
+              {
+                "required": true,
+                "in": "path",
+                "name": "id",
+                "description": "Deleta o método de pagamento pelo ID especificado"
+              }
+            ],
+            "responses": {
+              "200": { "description": "Deletado com sucesso" },
+              "401": { "description": "Não autorizado!" },
+              "422": { "description": "Método de pagamento não encontrado não encontrado" },
+              "500": { "description": "Erro interno do servidor" }
+            }
+          }
+    },
+    "/products": {
+      "post": {
+        "tags": ["Produto"],
+        "summary": "Criar produto",
+        "description": "Criar um novo produto - Apenas o usuário administrador pode criar",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": { "type": "object: {id: string}" },
+                  "description": { "type": "string" },
+                  "price": { "type": "number" }
+                },
+                "example": {
+                  "category": {
+                    "id": "43398660-36d7-4a36-a655-031d420b7608"
+                  },
+                  "description": "Exemplo produto",
+                  "price": 23.50
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Criado com sucesso" },
+          "422": { "description": "Nome de produto já cadastrado" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      },
+      "get": {
+        "tags": ["Produto"],
+        "summary": "Listar produtos",
+        "description": "Listar todos os produtos - Precisa estar autenticado",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Listado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "example": "095c8083-862a-4d3c-9122-87e82f23837c" },
+                      "description": { "type": "string", "example": "Exemplo produto" },
+                      "price": { "type": "number", "example": 23.50 },
+                      "image": { "type": "string", "example": "imagexample1231239" },
+                      "category": { "type": "object", "example": 
+                        {
+                        "id": "43398660-36d7-4a36-a655-031d420b7608",
+                        "createdAt": "2022-03-18T20:08:39.000Z",
+                        "updatedAt": "2022-03-18T20:08:39.000Z",
+                        "deletedAt": null,
+                        "description": "Categoria Exemplo"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Não autorizado!" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "tags": ["Produto"],
+        "summary": "Mostrar produto",
+        "description": "Mostra um produto pelo ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "description": "Encontra o produto pelo ID especificado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string", "example": "095c8083-862a-4d3c-9122-87e82f23837c" },
+                    "description": { "type": "string", "example": "Exemplo produto" },
+                    "price": { "type": "number", "example": 23.50 },
+                    "image": { "type": "string", "example": "imagexample1231239" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Não autorizado!" },
+          "422": { "description": "Produto não encontrado" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      },
+      "put": {
+        "tags": ["Produto"],
+        "summary": "Atualizar produto",
+        "description": "Atualizar um produto pelo ID - Usuário deve ser administrador",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "description": "Atualiza o produto pelo ID especificado"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": { "type": "object: { id: string }" },
+                  "description": { "type": "string" },
+                  "price": { "type": "number" }
+                },
+                "example": {
+                  "category": {
+                    "id": "43398660-36d7-4a36-a655-031d420b7608"
+                  },
+                  "description": "Exemplo produto",
+                  "price": 23.50
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Atualizado com sucesso" },
+          "422": { "description": "Produto não encontrado ou nome já cadastrado no banco" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      },
+      "delete": {
+        "tags": ["Produto"],
+        "summary": "Deletar produto",
+        "description": "Deleta um produto pelo ID - Usuário deve ser administrador",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "description": "Deleta o produto pelo ID especificado"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Deletado com sucesso" },
+          "401": { "description": "Não autorizado!" },
+          "422": { "description": "Produto não encontrado" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      }
+    },
+    "/request": {
+      "post": {
+        "tags": ["Pedidos"],
+        "summary": "Criar um pedido",
+        "description": "Criar um novo pedido",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {"type": "id: string"},
+                  "paymentMethod": { "type": "{ id: string }" },
+                  "deliveryRate": { "type": "number" },
+                  "total": { "type": "number" },
+                  "products": { "type": "[Object]" }
+                 
+                },
+                "example": {
+                  "user": "112312-asfd23fsdf-323fa3-sdfaa3",
+                  "paymentMethod": {"id": "43398660-36d7-4a36-a655-031d420b7608"},
+                  "deliveryRate": 3.0,
+                  "total": 10.0,
+                  "products": [
+                    {
+                      "product": {
+                        "id": "3dfda35b-c94d-4df6-a857-b0938e7126aa"
+                      },
+                      "productQuantity": 1,
+                      "currentPrice": 7.0
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Criado com sucesso" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      },
+      "get": {
+        "tags": ["Pedidos"],
+        "summary": "Listar todos os pedidos realizados",
+        "description": "Listar todos os pedidos - Apenas usuário administrador pode listar",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {  
+          "200": {
+            "description": "Listado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "deliveryRate": { "type": "number" },
+                      "total": { "type": "number" },
+                      "date": {"type": "string"},
+                      "products": { "type": "[Object]" }
+                     
+                    },
+                    "example": {
+                      "id": "43398660-36d7-4a36-a655-031d420b7608",
+                      "deliveryRate": 3.0,
+                      "total": 10.0,
+                      "date": "2022-05-03T19:18:00.000Z",
+                      "products": [
+                        {
+                          "product": {
+                            "id": "3dfda35b-c94d-4df6-a857-b0938e7126aa",
+                            "description": "Exemplo produto",
+                            "price": 7.0,
+                            "image": "exemploImagem.png"
+                          },
+                          "productQuantity": 1,
+                          "currentPrice": 7.0
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Não autorizado!" },
+          "500": { "description": "Erro interno do servidor" }
+          }
+      }
+    
+    },
+    "/request/user": {
+      "get": {
+        "tags": ["Pedidos"],
+        "summary": "Listar todos os pedidos do usuário logado",
+        "description": "Listar todos os pedidos do usuário logado - Precisa estar autenticado",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {  
+          "200": {
+            "description": "Listado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "deliveryRate": { "type": "number" },
+                      "total": { "type": "number" },
+                      "date": {"type": "string"},
+                      "paymentMethod": {"type": "Object"},
+                      "products": { "type": "[Object]" }
+                     
+                    },
+                    "example": {
+                      "id": "43398660-36d7-4a36-a655-031d420b7608",
+                      "deliveryRate": 3.0,
+                      "total": 10.0,
+                      "date": "2022-05-03T19:18:00.000Z",
+                      "paymentMethod": {
+                        "id":"43398660-36d7-4a36-a655-031d420b7608",
+                        "description": "Exemplo Método de Pagamento"
+                      },
+                      "products": [
+                        {
+                          "product": {
+                            "id": "3dfda35b-c94d-4df6-a857-b0938e7126aa",
+                            "description": "Exemplo produto",
+                            "price": 7.0,
+                            "image": "exemploImagem.png"
+                          },
+                          "productQuantity": 1,
+                          "currentPrice": 7.0
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Não autorizado!" },
+          "500": { "description": "Erro interno do servidor" }
+          }
+      }
+    },
+
+    "/request-status": {
+      "get": {
+        "tags": ["Status do Pedido"],
+        "summary": "Listar todos os Status",
+        "description": "Listar todos os status - Precisa estar autenticado",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Listado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "number", "example": 1 },
+                      "description": { "type": "string", "example": "Exemplo de Status" }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+          
+          "401": { "description": "Não autorizado!" },
+          "500": { "description": "Erro interno do servidor" }
+          }
+        }  
+      
+    },
+    "/request-status/{id}": {
+      "get": {
+        "tags": ["Status do Pedido"],
+        "summary": "Mostrar Status do pedido",
+        "description": "Mostra um status pelo ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "description": "Encontra um status pelo ID especificado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": "1" },
+                    "description": { "type": "string", "example": "Exemplo de Status" }
+                    }
+                }
+              }
+            }
+          },
+          "401": { "description": "Não autorizado!" },
+          "422": { "description": "Status não encontrado" },
+          "500": { "description": "Erro interno do servidor" }
+        }
+      }
+     
+    }
+    
+    
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
+

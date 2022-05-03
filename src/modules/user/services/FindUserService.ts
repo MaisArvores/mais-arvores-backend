@@ -11,7 +11,7 @@ export default class FindUserService {
   ) {}
 
   async execute(id: string): Promise<Partial<IUserDTO>> {
-    const user: Partial<IUserDTO> | undefined =
+    const user: Partial<IUserDTO> | undefined | null =
       await this.userRepository.findById(id);
 
     if (!user) {

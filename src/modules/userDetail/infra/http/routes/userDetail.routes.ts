@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { celebrate, Segments } from 'celebrate';
 import UserDetailController from '../controller/UserDetailController';
-import createUserDetailSchema from '../../../schemas/userDetail.schema';
+import createUserDetailSchema from '../../../schemas/createUserDetail.schema';
 import { ensureAuthenticated } from '../../../../user/middlewares/ensureAuthenticated';
+import updateUserDetailSchema from 'modules/userDetail/schemas/updateUserDetail.schema';
 
 const userDetailRoutes = Router();
 
@@ -17,7 +18,7 @@ userDetailRoutes.post(
 
 userDetailRoutes.put(
   '/:id',
-  celebrate({ [Segments.BODY]: createUserDetailSchema }),
+  celebrate({ [Segments.BODY]: updateUserDetailSchema }),
   ensureAuthenticated,
   userDetailController.update,
 );

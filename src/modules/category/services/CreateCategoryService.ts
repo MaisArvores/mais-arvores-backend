@@ -16,7 +16,7 @@ export default class CreateCategoryService {
     );
 
     if (category) {
-      throw new AppError('Category already exists');
+      throw new AppError('RequestStatus already exists');
     }
 
     return this.categoryRepository.save(data);

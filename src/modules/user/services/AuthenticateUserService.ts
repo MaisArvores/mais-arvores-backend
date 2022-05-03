@@ -4,6 +4,7 @@ import { ITokenManagerProvider } from 'shared/providers/TokenManagerProvider/ITo
 import { IUserRepository } from '../repositories/IUserRepository';
 import { AppError } from '../../../shared/errors/AppError';
 import { IEncoderProvider } from '../../../shared/providers/EncoderProvider/IEncoderProvider';
+import api from '../../../config/api';
 
 interface IAuthenticateRequest {
   email: string;
@@ -38,13 +39,11 @@ export default class AuthenticateUserService {
       throw new AppError('Email or password incorrect');
     }
 
-    return this.tokenManagerProvider.sign(
-      {},
-      '78a63fac36fe1c6b29093ed3c70a09f7',
-      {
-        subject: user.id,
-        expiresIn: '1d',
-      },
-    );
+    const apiConfig = api();
+
+    return this.tokenManagerProvider.sign({}, apiConfig.JWT_SECRET, {
+      subject: user.id,
+      expiresIn: '1d',
+    });
   }
 }
